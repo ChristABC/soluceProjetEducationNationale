@@ -13,17 +13,23 @@ namespace projetEducationNationale
         public string Prenom { get; set; }
         public DateTime DateDeNaissance { get; set; }
 
-        //Trouver un moyen pour notes; poser questions sur les dictionnaires
-        //Ce que fait Pauline
-
-        // Creation constructeur ELEVE
-
+       
         public Eleve(int id, string nom, string prenom, DateTime dateDeNaissance)
         {
             ID = id;
             Nom = nom;
             Prenom = prenom;
             DateDeNaissance = dateDeNaissance;
+        }
+        
+
+        public void consulterEleves ()
+        {
+            Console.WriteLine("----------------------------------------------------------------------\n");
+            Console.WriteLine("Nom: " + Nom);
+            Console.WriteLine("Prenom: "+ Prenom);
+            Console.WriteLine("Date de Naissance : " + DateDeNaissance);
+
         }
 
     }

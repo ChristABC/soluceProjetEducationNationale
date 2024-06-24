@@ -17,7 +17,8 @@ namespace projetEducationNationale
             Id = id; 
             Nom = nom;
         }
+        
     }
-
+    
 }
 
