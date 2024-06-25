@@ -8,7 +8,10 @@ namespace projetEducationNationale
 {
     public class GestionMenu
     {
-        public GestionMenu() { }
+        public GestionEleve gestion;
+        public GestionMenu(GestionEleve gestion) {
+            this.gestion = gestion;
+        }
 
         public void MenuEleves()
         {
@@ -52,9 +55,64 @@ namespace projetEducationNationale
                     break;
 
             }
-        }
+            void AjouterEleve()
+            {
+                Console.WriteLine("Entrez l'ID de l'élève:");
+                int id = int.Parse(Console.ReadLine());
 
-        public void MenuCours()
+                Console.WriteLine("Entrez le nom de l'élève:");
+                string nom = Console.ReadLine();
+
+                Console.WriteLine("Entrez le prénom de l'élève:");
+                string prenom = Console.ReadLine();
+
+                Console.WriteLine("Entrez la date de naissance de l'élève (yyyy-mm-dd):");
+                DateTime dateDeNaissance = DateTime.Parse(Console.ReadLine());
+
+                Eleve nouvelEleve = new Eleve(id, nom, prenom, dateDeNaissance);
+                gestion.AjouterEleve(nouvelEleve);
+            }
+
+            void ConsulterEleve()
+            {
+                Console.WriteLine("Entrez l'ID de l'élève à consulter:");
+                int id = int.Parse(Console.ReadLine());
+
+                Eleve eleve = gestion.ObtenirEleveParId(id);
+                gestion.AfficherDetailsEleve(eleve);
+            }
+
+            void AjouterNoteEtAppreciation()
+            {
+                Console.WriteLine("Entrez l'ID de l'élève:");
+                int id = int.Parse(Console.ReadLine());
+
+                Eleve eleve = gestion.ObtenirEleveParId(id);
+                if (eleve != null)
+                {
+                    Console.WriteLine("Entrez le nom du cours:");
+                    string cours = Console.ReadLine();
+
+                    Console.WriteLine("Entrez la note:");
+                    int note = int.Parse(Console.ReadLine());
+
+                    Console.WriteLine("Entrez l'appréciation:");
+                    string appreciation = Console.ReadLine();
+
+                    Note nouvelleNote = new Note(cours, note, appreciation);
+                    eleve.AjouterNote(nouvelleNote);
+
+                    Console.WriteLine("Note et appréciation ajoutées avec succès.");
+                }
+                else
+                {
+                    Console.WriteLine("Élève non trouvé.");
+                }
+            }
+        }
+    }
+
+        void MenuCours()
         {
             Console.WriteLine("1. Lister les cours existants");
             Console.WriteLine("2. Ajouter un nouveau cours au programme");
@@ -84,9 +142,10 @@ namespace projetEducationNationale
                     Console.WriteLine("Choix incorrect.");
                     break;
             }
+
         }
 
 
 
     }
-}
+
