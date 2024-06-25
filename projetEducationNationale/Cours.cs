@@ -11,14 +11,15 @@ namespace projetEducationNationale
         //Accesseurs aux infos sur le cours donc id cours et nom
         public int Id { get; set; }
         public string Nom { get; set; }
+        public List<string> Courses { get; set; } = new List<string>();
 
         public Cours(int id, string nom)
         {
-            Id = id; 
+            Id = id;
             Nom = nom;
         }
-        
+
     }
-    
+
 }
 
