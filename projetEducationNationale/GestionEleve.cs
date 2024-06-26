@@ -6,24 +6,24 @@ using System.Threading.Tasks;
 
 namespace projetEducationNationale
 {
-    ppublic class GestionEleve
+    public class GestionEleve
     {
-
-        public List<Eleve> eleves = new List<Eleve>();
+        public List<Eleve> listEleves = new List<Eleve>();
 
         public void AjouterEleve(Eleve eleve)
         {
-            eleves.Add(eleve);
+            listEleves.Add(eleve);
         }
 
         public List<Eleve> ObtenirListeEleves()
         {
-            return eleves;
+            return listEleves;
         }
-
+        
+        //Methode qui va prendre l'ID et le comparer avec les autres id 
         public Eleve ObtenirEleveParId(int id)
         {
-            return eleves.Find(eleve => eleve.ID == id);
+            return listEleves.Find(eleve => eleve.ID == id);
         }
 
 
@@ -46,10 +46,11 @@ namespace projetEducationNationale
         }
         public void AfficherListeEleves()
         {
-            foreach (Eleve eleve in eleves)
+            foreach (Eleve eleve in listEleves)
             {
 
                 Console.WriteLine($"Nom: {eleve.Nom}, Prénom: {eleve.Prenom}");
             }
         }
     }
+}

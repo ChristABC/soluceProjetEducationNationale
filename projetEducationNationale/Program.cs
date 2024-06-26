@@ -7,8 +7,8 @@ public class MainProgram
     public static void Main(string[] args)
     {
         bool continuerProgramme = true;
-        EleveControl control = new EleveControl();
-        GestionMenu menu = new GestionMenu();
+        GestionEleve gestion = new GestionEleve();
+        MenuGestion menu = new MenuGestion();
 
         while (continuerProgramme)
         {
