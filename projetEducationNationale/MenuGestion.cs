@@ -4,94 +4,97 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using static System.Collections.Specialized.BitVector32;
+using static System.Runtime.InteropServices.JavaScript.JSType;
 
 namespace projetEducationNationale
 {
     public class MenuGestion
     {
-        public GestionEleve gestionEleve;
-        public GestionCours gestionCours;
+        public GestionEleve gestionEleve = new GestionEleve();
+        public GestionCours gestionCours = new GestionCours();
         public List<Cours> listCours = new List<Cours>();
+        public List<Eleve> listEleve = new List<Eleve>();
+        
 
-        /*public void gestionEleveMenu( GestionEleve gestion )
-        {
-            this.gestionEleve = gestion;
-        }
-        public void gestionCoursMenu(GestionCours gestion)
-        {
-            this.gestionCours = gestion;
-        }*/
 
         public void MenuEleves()
         {
-            Console.WriteLine("1. Lister les élèves");
-            Console.WriteLine("2. Créer un nouvel élève");
-            Console.WriteLine("3. Consulter un élève existant");
-            Console.WriteLine("4. Ajouter une note et une appréciation pour un cours sur un élève existant");
-            Console.WriteLine("5. Revenir au menu principal");
-
-            string choix = Console.ReadLine();
-
-            switch (choix)
+            while (true)
             {
-                case "1":
-                    Console.WriteLine("Liste des élèves");
-                    gestionEleve.AfficherListeEleves();
-                    break;
-                case "2":
-                    Console.WriteLine("Créer un nouvel élève");
-                    AjouterEleve();
-                    break;
-                case "3":
-                    Console.WriteLine("Consulter un élève existant");
-                    ConsulterEleve();
-                    break;
-                case "4":
-                    Console.WriteLine("Ajouter une note et une appréciation pour un cours sur un élève existant");
-                    AjouterNoteEtAppreciation();
-                    break;
-                case "5":
-                    // Revenir au menu principal
-                    break;
-                default:
-                    Console.WriteLine("Valeur incorrecte.");
-                    break;
+                Console.WriteLine("1. Lister les élèves");
+                Console.WriteLine("2. Créer un nouvel élève");
+                Console.WriteLine("3. Consulter un élève existant");
+                Console.WriteLine("4. Ajouter une note et une appréciation pour un cours sur un élève existant");
+                Console.WriteLine("5. Revenir au menu principal");
+
+                string choix = Console.ReadLine();
+
+                switch (choix)
+                {
+                    case "1":
+                        Console.WriteLine("Liste des élèves");
+                        AfficherListeEleves();
+                        break;
+                    case "2":
+                        Console.WriteLine("Créer un nouvel élève");
+                        AjouterEleve();
+                        break;
+                    case "3":
+                        Console.WriteLine("Consulter un élève existant");
+                        ConsulterEleveParId();
+                        break;
+                    case "4":
+                        Console.WriteLine("Ajouter une note et une appréciation pour un cours sur un élève existant");
+                        AjouterNoteEtAppreciation();
+                        break;
+                    case "5":
+                        return;                        
+                    default:
+                        Console.WriteLine("Valeur incorrecte.");
+                        break;
+                }
             }
         }
 
         public void MenuCours()
         {
-            Console.WriteLine("1. Lister les cours existants");
-            Console.WriteLine("2. Ajouter un nouveau cours au programme");
-            Console.WriteLine("3. Supprimer un cours par son identifiant");
-            Console.WriteLine("4. Revenir au menu principal");
-
-            string choix = Console.ReadLine();
-
-            switch (choix)
+            while (true)
             {
-                case "1":
-                    Console.WriteLine("Lister les cours existants");
-                    AfficherCours();
-                    break;
-                case "2":
-                    Console.WriteLine("Ajouter un nouveau cours au programme");
-                    AjouterCours();
-                    break;
-                case "3":
-                    Console.WriteLine("Supprimer un cours par son identifiant");
-                    SupprimerCours();
-                    break;
-                case "4":
-                    // Revenir au menu principal
-                    break;
-                default:
-                    Console.WriteLine("Choix incorrect.");
-                    break;
+                Console.WriteLine("1. Lister les cours existants");
+                Console.WriteLine("2. Ajouter un nouveau cours au programme");
+                Console.WriteLine("3. Supprimer un cours par son identifiant");
+                Console.WriteLine("4. Revenir au menu principal");
+
+                string choix = Console.ReadLine();
+
+                switch (choix)
+                {
+                    case "1":
+                        Console.WriteLine("Lister les cours existants");
+                        AfficherCours();
+                        break;
+                    case "2":
+                        Console.WriteLine("Ajouter un nouveau cours au programme");
+                        AjouterCours();
+                        break;
+                    case "3":
+                        Console.WriteLine("Supprimer un cours par son identifiant");
+                        SupprimerCours();
+                        break;
+                    case "4":
+                        return;
+                    default:
+                        Console.WriteLine("Choix incorrect.");
+                        break;
+                }
             }
         }
 
-        private void AjouterEleve()
+
+
+        // METHODE POUR ELEVE
+
+        public void AjouterEleve()
         {
             Console.WriteLine("Entrez l'ID de l'élève:");
             int id = int.Parse(Console.ReadLine());
@@ -106,51 +109,87 @@ namespace projetEducationNationale
             DateTime dateDeNaissance = DateTime.Parse(Console.ReadLine());
 
             Eleve nouvelEleve = new Eleve(id, nom, prenom, dateDeNaissance);
+            listEleve.Add(nouvelEleve);
+
+            Console.WriteLine($"L'élève {nom}{prenom} avec l'identifiant {id} a été ajouté.");
+
         }
 
-
-        private void ConsulterEleve()
+        public void AfficherListeEleves()
         {
-            Console.WriteLine("Entrez l'ID de l'élève à consulter:");
-            int id = int.Parse(Console.ReadLine());
+            foreach (var eleve in listEleve)
+            {
 
-            Eleve eleve = gestionEleve.ObtenirEleveParId(id);
-            gestionEleve.AfficherDetailsEleve(eleve);
+                Console.WriteLine($"Nom: {eleve.Nom}, Prénom: {eleve.Prenom}");
+            }
         }
 
-        private void AjouterNoteEtAppreciation()
+        public Eleve ObtenirEleveParId(int id)
         {
-            Console.WriteLine("Entrez l'ID de l'élève:");
-            int id = int.Parse(Console.ReadLine());
+            return listEleve.Find(listEleve => listEleve.ID == id);
+        }
 
-            Eleve eleve = gestionEleve.ObtenirEleveParId(id);
+        public void AfficherDetailsEleve(Eleve eleve)
+        {
             if (eleve != null)
             {
-                Console.WriteLine("Entrez le nom du cours:");
-                string cours = Console.ReadLine();
-
-                Console.WriteLine("Entrez la note:");
-                int note = int.Parse(Console.ReadLine());
-
-                Console.WriteLine("Entrez l'appréciation:");
-                string appreciation = Console.ReadLine();
-
-                Note nouvelleNote = new Note(cours, note, appreciation);
-                eleve.AjouterNote(nouvelleNote);
-
-                Console.WriteLine("Note et appréciation ajoutées avec succès.");
+                Console.WriteLine("----------------------------------------------------------------------\n");
+                Console.WriteLine($"ID: {eleve.ID} \nNom: {eleve.Nom} \nPrénom: {eleve.Prenom} \nDate de Naissance: {eleve.DateDeNaissance.ToShortDateString()}");
+                Console.WriteLine("Résultats scolaires :");
+                foreach (var note in eleve.Notes)
+                {
+                    Console.WriteLine($"Cours: {note.Matiere} \nNote: {note.ValeurNote} \nAppréciation: {note.Appreciation}");
+                }
+                double moyenne = eleve.MoyenneNotesEleve();
+                Console.WriteLine($"\nMoyenne: {moyenne}/20");
             }
             else
             {
                 Console.WriteLine("Élève non trouvé.");
             }
         }
+        public void ConsulterEleveParId()
+        {
+            Console.WriteLine("Entrez l'ID de l'élève à consulter:");
+            int id = int.Parse(Console.ReadLine());
+
+            Eleve eleve = ObtenirEleveParId(id);
+            AfficherDetailsEleve(eleve);
+        }
+
+        public void AjouterNoteEtAppreciation()
+        {
+            Console.WriteLine("Entrez l'ID de l'élève:");
+            int id = int.Parse(Console.ReadLine());
+            Eleve eleve = ObtenirEleveParId(id);
+
+            if (eleve != null)
+            {
+                Console.WriteLine("Entrez l'Id du cours: ");
+                int x = int.Parse(Console.ReadLine());
+                Cours cours = ObtenirCoursParId(x);
+                
+                Console.WriteLine("Entrez la note: ");
+                double note = double.Parse(Console.ReadLine());
+
+                Console.WriteLine("Entrez l'appréciation:");
+                string appreciation = Console.ReadLine();
+
+                Note nouvelleNote = new Note(cours.Nom, note, appreciation);
+                eleve.AjouterNote(nouvelleNote);
+
+                Console.WriteLine($"La note {note} et l'appréciation sont ajoutées au cours {cours.Nom } à l'élève : {eleve.Nom}.");
+            }
+            else
+            {
+                Console.WriteLine("Élève non trouvé.");
+            }
+        }
+
+        //METHODE POUR LE COURS
+
         public void AjouterCoursALaList(Cours cours) => listCours.Add(cours);
 
-        public List<Cours> ObtenirListCours()
-        {
-            return listCours;
-        }
 
         public Cours ObtenirCoursParId(int ID)
         {
@@ -178,8 +217,19 @@ namespace projetEducationNationale
 
             if (cours != null)
             {
-                listCours.Remove(cours);
-                Console.WriteLine($"Le cours avec l'ID {id} a été supprimé.");
+                Console.WriteLine($"Voulez-vous supprimer le cours ? {cours.Nom}(oui/non) ");
+                string confirmer = Console.ReadLine();
+
+                if (confirmer.ToLower() != "oui")
+                {
+                  listCours.Remove(cours);
+                Console.WriteLine($"Le cours avec l'ID {id} a été supprimé.");  
+                }
+                else
+                {
+                    return;
+                }
+                
             }
             else
             {

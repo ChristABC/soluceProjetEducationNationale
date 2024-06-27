@@ -10,16 +10,12 @@ namespace projetEducationNationale
     {
         public List<Eleve> listEleves = new List<Eleve>();
 
-        public void AjouterEleve(Eleve eleve)
+        public void AjouterAListEleve(Eleve eleve)
         {
             listEleves.Add(eleve);
         }
 
-        public List<Eleve> ObtenirListeEleves()
-        {
-            return listEleves;
-        }
-        
+                
         //Methode qui va prendre l'ID et le comparer avec les autres id 
         public Eleve ObtenirEleveParId(int id)
         {

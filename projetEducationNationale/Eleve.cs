@@ -12,7 +12,9 @@ namespace projetEducationNationale
         public string Nom { get; set; }
         public string Prenom { get; set; }
         public DateTime DateDeNaissance { get; set; }
+        public double Moyenne; 
         public List<Note> Notes { get; set; }
+        
 
 
 
@@ -29,12 +31,25 @@ namespace projetEducationNationale
         {
             Notes.Add(note);
         }
+
+        public double MoyenneNotesEleve()
+        {
+            if (Notes.Count == 0)
+            {
+                return 0;
+            }
+            else
+            {
+                return Notes.Average(note => note.ValeurNote);
+            }
+        }
     }
     public class Note
     {
         public string Matiere { get; set; }
         public double ValeurNote { get; set; }
         public string Appreciation { get; set; }
+        public double Moyenne;
 
         public Note(string cours, double valeurNote, string appreciation)
         {
@@ -42,7 +57,10 @@ namespace projetEducationNationale
             ValeurNote = valeurNote;
             Appreciation = appreciation;
         }
+        
     }
+
+
 }
 
 
