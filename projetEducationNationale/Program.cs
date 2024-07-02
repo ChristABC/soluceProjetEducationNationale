@@ -1,45 +1,28 @@
-﻿using projetEducationNationale;
-using System;
-using System.ComponentModel.Design;
-using System.Security.Cryptography.X509Certificates;
-public class MainProgram
-{
-    public static void Main(string[] args)
-    {
-        bool continuerProgramme = true;
-        GestionEleve gestion = new GestionEleve();
-        MenuGestion menu = new MenuGestion();
+﻿using projetEducationNationale.ManagerFolder;
+using projetEducationNationale.SaveManager;
+using Serilog;
 
-        while (continuerProgramme)
-        {
-            Console.WriteLine("Souhaitez-vous ouvrir le menu élève (1) ou cours (2): ");
 
-            string choix = Console.ReadLine();
+LoggerConfig.Configuration();
 
-            switch (choix)
-            {
-                case "1":
-                    menu.MenuEleves();
-                    break;
-                case "2":
-                    menu.MenuCours();
-                    break;
-                default:
+// Charge les données utilisateur depuis la sauvegarde
+MenuGestion.DonneesUtilisateur donneesUtilisateur = SauvegardeHelper.Load();
+//Log.Debug("chargement");
+//Log.Information();
+//Log.Warning();
+//Log.Fatal
 
-                    Console.WriteLine("Choix inccorect. Veuillez choisir entre (1) et (2)");
-                    break;
-            }
-            Console.WriteLine("Voulez-vous continuer ?(oui/non) ");
-            string continuer = Console.ReadLine();
 
-            if (continuer.ToLower() != "oui")
-            {
-                continuerProgramme &= false;
+// Cré une instance de MenuGestion en utilisant les données utilisateur chargées
+MenuGestion menuGestion = new MenuGestion(donneesUtilisateur);
 
-            }
+// Appel le menu principal pour commencer l'interaction avec l'utilisateur
+menuGestion.MenuPrincipal();
 
-        }
+// Sauvegarde les données utilisateur après les modifications
+SauvegardeHelper.Save(donneesUtilisateur);
 
-    }
-}
+
+Log.Information("Info test !!");
+
 

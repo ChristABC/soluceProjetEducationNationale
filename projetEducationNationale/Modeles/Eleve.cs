@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace projetEducationNationale
+namespace projetEducationNationale.Modeles
 {
     public class Eleve
     {
@@ -12,20 +12,19 @@ namespace projetEducationNationale
         public string Nom { get; set; }
         public string Prenom { get; set; }
         public DateTime DateDeNaissance { get; set; }
-        public double Moyenne; 
-        public List<Note> Notes { get; set; }
-        
+        public string PromotionEleve;
+        public double Moyenne;
+
+        public List<Note> Notes { get; set; } = new List<Note>();
 
 
-
-
-        public Eleve(int id, string nom, string prenom, DateTime dateDeNaissance)
+        public Eleve(int id, string nom, string prenom, DateTime dateDeNaissance, string promotion)
         {
             ID = id;
             Nom = nom;
             Prenom = prenom;
             DateDeNaissance = dateDeNaissance;
-            Notes = new List<Note>();
+            PromotionEleve = promotion;
         }
         public void AjouterNote(Note note)
         {
@@ -40,8 +39,16 @@ namespace projetEducationNationale
             }
             else
             {
-                return Notes.Average(note => note.ValeurNote);
+                double moyenneBrute = Notes.Average(note => note.ValeurNote);
+                return ArrondirMoyenne(moyenneBrute);
             }
+        }
+
+        public double ArrondirMoyenne(double moyenne)
+        {
+            // Arrondir à 1 chiffre après la virgule
+            double arrondi = Math.Round(moyenne * 2, MidpointRounding.AwayFromZero) / 2;
+            return arrondi;
         }
     }
     public class Note
@@ -49,6 +56,7 @@ namespace projetEducationNationale
         public string Matiere { get; set; }
         public double ValeurNote { get; set; }
         public string Appreciation { get; set; }
+
         public double Moyenne;
 
         public Note(string cours, double valeurNote, string appreciation)
@@ -57,11 +65,20 @@ namespace projetEducationNationale
             ValeurNote = valeurNote;
             Appreciation = appreciation;
         }
-        
+
     }
 
+    public class Promotion
+    {
+        public string NamePromotion { get; set; }
+
+        // Constructeur de la classe Promotion
+        public Promotion(string name)
+        {
+            NamePromotion = name;
+        }
+    }
 
 }
-
 
 
