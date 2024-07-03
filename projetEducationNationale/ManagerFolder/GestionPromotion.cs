@@ -18,14 +18,15 @@ namespace projetEducationNationale.ManagerFolder
         {
             this.donnees = donnees;
         }
-        
 
         public void MenuPromotion()
         {
             while (true)
             {
                 Console.WriteLine("1. Liste des promotions");
-
+                Console.WriteLine("2. Sélectionner une promotion");
+                Console.WriteLine("3. Afficher la moyenne d'une promotion");
+                Console.WriteLine("4. Afficher les promotions uniques");
                 Console.WriteLine("5. Revenir au menu principal");
 
                 string choix = Console.ReadLine();
@@ -38,15 +39,17 @@ namespace projetEducationNationale.ManagerFolder
                         break;
                     case "2":
                         Console.WriteLine("Quelle promotion voulez-vous afficher ? :");
-                        SelectionnerElevesParPromotion(Console.ReadLine());
+                        string promotionToSelect = Console.ReadLine();
+                        SelectionnerElevesParPromotion(promotionToSelect);
                         break;
                     case "3":
                         Console.WriteLine("Vous souhaitez afficher la moyenne de quelle promotion? ");
-                        MoyennePromotion(Console.ReadLine());
+                        string promotionToAverage = Console.ReadLine();
+                        double moyenne = MoyennePromotion(promotionToAverage);
+                        Console.WriteLine($"La moyenne des élèves de la promotion {promotionToAverage} est {moyenne}");
                         break;
                     case "4":
-                        Console.WriteLine("Ajouter une note et une appréciation pour un cours sur un élève existant :");
-
+                        ObtenirPromotions();
                         break;
                     case "5":
                         return;
@@ -60,11 +63,24 @@ namespace projetEducationNationale.ManagerFolder
         // Méthode pour sélectionner les élèves par promotion
         public List<Eleve> SelectionnerElevesParPromotion(string nomPromotion)
         {
-            return donnees.listEleve.Where(e => e.PromotionEleve == nomPromotion).ToList();
+            List<Eleve> eleves = donnees.listEleve.Where(e => e.PromotionEleve == nomPromotion).ToList();
+            if (eleves.Count == 0)
+            {
+                Console.WriteLine("Aucun élève trouvé pour cette promotion.");
+            }
+            else
+            {
+                Console.WriteLine($"Élèves de la promotion {nomPromotion} :");
+                foreach (Eleve eleve in eleves)
+                {
+                    Console.WriteLine($"- {eleve.Prenom} {eleve.Nom}");
+                }
+            }
+            return eleves;
         }
 
         // Méthode pour calculer la moyenne des notes de tous les élèves d'une promotion
-        public float MoyennePromotion(string nomPromotion)
+        public double MoyennePromotion(string nomPromotion)
         {
             List<Eleve> elevesPromotion = SelectionnerElevesParPromotion(nomPromotion);
 
@@ -73,17 +89,18 @@ namespace projetEducationNationale.ManagerFolder
                 throw new InvalidOperationException("Aucun élève trouvé pour cette promotion.");
             }
 
-            float sommeNotes = 0;
-            int nombreNotes = 0;
+            double sommeNotes = 0;
+            double nombreNotes = 0;
 
             foreach (Eleve eleve in elevesPromotion)
             {
-                System.Collections.IList list = eleve.Notes;
-                for (int i = 0; i < list.Count; i++)
+                if (eleve.Notes != null && eleve.Notes.Count > 0)
                 {
-                    float note = (float)list[i];
-                    sommeNotes += note;
-                    nombreNotes++;
+                    foreach (Note note in eleve.Notes)
+                    {
+                        sommeNotes += note.ValeurNote;
+                        nombreNotes++;
+                    }
                 }
             }
 
@@ -92,19 +109,43 @@ namespace projetEducationNationale.ManagerFolder
                 throw new InvalidOperationException("Aucune note disponible pour les élèves de cette promotion.");
             }
 
-            return sommeNotes / nombreNotes;
+            return Convert.ToDouble(sommeNotes / nombreNotes);
         }
+
         public void AfficherListPromotion()
         {
-            Console.WriteLine("\t\tVoici la liste des promotions : ");
-            foreach (var promotion in listPromotion)
+            if (listPromotion.Count == 0)
             {
-                Console.WriteLine($"Nom : {promotion.NamePromotion}");
+                Console.WriteLine("Aucune promotion n'est disponible.");
+                return;
+            }
+
+            Console.WriteLine("\t\tVoici la liste des promotions : ");
+            for (int i = 0; i < listPromotion.Count; i++)
+            {
+                Promotion promotion = listPromotion[i];
+                Console.WriteLine($"{i + 1}. Nom : {promotion.NamePromotion}");
             }
         }
-        public void AjouterPromotion(Promotion Name)
+        public void AjouterPromotion(Promotion promotion)
         {
-            listPromotion.Add(Name);
+            listPromotion.Add(promotion);
+        }
+        // Méthode pour obtenir la liste des promotions uniques
+        public List<string> ObtenirPromotions()
+        {
+            List<string> PromotionsList = donnees.listEleve
+                .Select(e => e.PromotionEleve)
+                .Distinct()
+                .ToList();
+
+            Console.WriteLine("Liste des promotions uniques :");
+            foreach (string promotion in PromotionsList)
+            {
+                Console.WriteLine($"- {promotion}");
+            }
+
+            return PromotionsList;
         }
     }
 }

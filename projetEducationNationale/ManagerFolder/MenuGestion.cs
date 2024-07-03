@@ -38,7 +38,7 @@ namespace projetEducationNationale.ManagerFolder
             {
                 Console.WriteLine("1. Gestion des élèves");
                 Console.WriteLine("2. Gestion des cours");
-                Console.WriteLine("3. Liste des promotions");
+                Console.WriteLine("3. Gestion des promotions");
                 Console.WriteLine("4. Quitter");
 
                 string choix = Console.ReadLine();
@@ -52,7 +52,7 @@ namespace projetEducationNationale.ManagerFolder
                         gestionCours.MenuCours();
                         break;
                     case "3":
-                        gestionPromotion.AfficherListPromotion();
+                        gestionPromotion.MenuPromotion();
                         break;
                     case "4":
                         return;
