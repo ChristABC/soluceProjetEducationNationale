@@ -13,9 +13,9 @@ namespace projetEducationNationale.Modeles
         public string Prenom { get; set; }
         public DateTime DateDeNaissance { get; set; }
         public string PromotionEleve;
-        public double Moyenne;
+        public string Moyenne;
 
-        public List<Note> Notes { get; set; } = new List<Note>();
+        public List<Note> Notes { get; set; }
 
 
         public Eleve(int id, string nom, string prenom, DateTime dateDeNaissance, string promotion)
@@ -25,17 +25,17 @@ namespace projetEducationNationale.Modeles
             Prenom = prenom;
             DateDeNaissance = dateDeNaissance;
             PromotionEleve = promotion;
+            Notes = new List<Note>();
         }
         public void AjouterNote(Note note)
         {
             Notes.Add(note);
         }
-
         public double MoyenneNotesEleve()
         {
             if (Notes.Count == 0)
             {
-                return 0;
+                return double.NaN;  // Indiquer "non noté" avec NaN
             }
             else
             {
@@ -46,9 +46,7 @@ namespace projetEducationNationale.Modeles
 
         public double ArrondirMoyenne(double moyenne)
         {
-            // Arrondir à 1 chiffre après la virgule
-            double arrondi = Math.Round(moyenne * 2, MidpointRounding.AwayFromZero) / 2;
-            return arrondi;
+            return Math.Round(moyenne, 2); // Arrondir à 2 décimales
         }
     }
     public class Note
@@ -68,17 +66,8 @@ namespace projetEducationNationale.Modeles
 
     }
 
-    public class Promotion
-    {
-        public string NamePromotion { get; set; }
-
-        // Constructeur de la classe Promotion
-        public Promotion(string name)
-        {
-            NamePromotion = name;
-        }
-    }
-
 }
+
+
 
 

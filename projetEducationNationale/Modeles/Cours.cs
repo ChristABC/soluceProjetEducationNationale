@@ -9,12 +9,12 @@ namespace projetEducationNationale.Modeles
     public class Cours
     {
         //Accesseurs aux infos sur le cours donc id cours et nom
-        public int numberId { get; set; }
+        public int coursID { get; set; }
         public string Nom { get; set; }
 
         public Cours(int id, string nom)
         {
-            numberId = id;
+            coursID = id;
             Nom = nom;
         }
 

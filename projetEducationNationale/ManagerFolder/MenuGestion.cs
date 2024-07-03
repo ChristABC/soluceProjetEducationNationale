@@ -15,19 +15,21 @@ namespace projetEducationNationale.ManagerFolder
         private DonneesUtilisateur donneesUtilisateur;
         private GestionEleve gestionEleve;
         private GestionCours gestionCours;
+        public GestionPromotion gestionPromotion;
 
         public MenuGestion(DonneesUtilisateur donnees)
         {
             donneesUtilisateur = donnees;
             gestionEleve = new GestionEleve(donnees);
             gestionCours = new GestionCours(donnees);
+            gestionPromotion = new GestionPromotion(donnees);
         }
 
         public class DonneesUtilisateur
         {
             public List<Cours> listCours { get; set; } = new List<Cours>();
             public List<Eleve> listEleve { get; set; } = new List<Eleve>();
-            public List<Promotion> listPromotion { get; set; } = new List<Promotion>();
+
         }
 
         public void MenuPrincipal()
@@ -36,7 +38,8 @@ namespace projetEducationNationale.ManagerFolder
             {
                 Console.WriteLine("1. Gestion des élèves");
                 Console.WriteLine("2. Gestion des cours");
-                Console.WriteLine("3. Quitter");
+                Console.WriteLine("3. Liste des promotions");
+                Console.WriteLine("4. Quitter");
 
                 string choix = Console.ReadLine();
 
@@ -49,6 +52,9 @@ namespace projetEducationNationale.ManagerFolder
                         gestionCours.MenuCours();
                         break;
                     case "3":
+                        gestionPromotion.AfficherListPromotion();
+                        break;
+                    case "4":
                         return;
                     default:
                         Console.WriteLine("Choix incorrect.");

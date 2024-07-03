@@ -5,6 +5,8 @@ using System.Text;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using projetEducationNationale.Modeles;
+using Serilog;
+using static projetEducationNationale.ManagerFolder.MenuGestion;
 
 namespace projetEducationNationale.ManagerFolder
 {
@@ -52,14 +54,16 @@ namespace projetEducationNationale.ManagerFolder
         {
             try
             {
-                int id = ObtenirMaxIdCours() + 1;
+                int coursID = ObtenirMaxIdCours() + 1;
                 
                 string nom = DemanderEtValiderNom("Entrez le nom du cours (lettres uniquement) :");
 
-                Cours nouveauCours = new Cours(id, nom);
+                Cours nouveauCours = new Cours(coursID, nom);
                 donnees.listCours.Add(nouveauCours);
 
-                Console.WriteLine($"Le cours {nom} avec l'ID {id} a été ajouté.");
+                Console.WriteLine($"Le cours {nom} avec l'ID {coursID} a été ajouté.");
+                SauvegardeHelper.Save(donnees);
+                Log.Information("Les données pour l'ajout d'un nouveau cours ont été sauvegardées avec succès.");
             }
             catch (FormatException)
             {
@@ -71,26 +75,28 @@ namespace projetEducationNationale.ManagerFolder
         {
             Console.WriteLine("Entrez l'ID du cours:");
 
-            if (int.TryParse(Console.ReadLine(), out int id))
+            if (int.TryParse(Console.ReadLine(), out int coursID))
             {
-                Cours cours = ObtenirCoursParId(id);
+                Cours cours = ObtenirCoursParId(coursID);
 
                 if (cours != null)
                 {
                     if (DemanderConfirmationSuppression(cours))
                     {
                         donnees.listCours.Remove(cours);
-                        Console.WriteLine($"Le cours avec l'ID {id} a été supprimé.");
+                        Console.WriteLine($"Le cours avec l'coursID {coursID} a été supprimé.");
+                        SauvegardeHelper.Save(donnees);
+                        Log.Information("Les données de la suppression du cours ont été sauvegardées avec succès.");
                     }
                 }
                 else
                 {
-                    Console.WriteLine($"Aucun cours trouvé avec l'ID {id}.");
+                    Console.WriteLine($"Aucun cours trouvé avec le coursID suivant :  {coursID}.");
                 }
             }
             else
             {
-                Console.WriteLine("ID invalide. Veuillez entrer un nombre entier.");
+                Console.WriteLine("CoursID invalcoursIDe. Veuillez entrer un nombre entier.");
             }
         }
 
@@ -107,19 +113,19 @@ namespace projetEducationNationale.ManagerFolder
             Console.WriteLine("Liste de Cours : ");
             foreach (var cours in donnees.listCours)
             {
-                Console.WriteLine($"ID: {cours.numberId}, Nom: {cours.Nom}");
+                Console.WriteLine($"ID: {cours.coursID}, Nom: {cours.Nom}");
             }
         }
 
         public Cours ObtenirCoursParId(int id)
         {
-            return donnees.listCours.Find(cours => cours.numberId == id);
+            return donnees.listCours.Find(cours => cours.coursID == id);
         }
 
         public int ObtenirMaxIdCours()
         {
             // Logique pour obtenir le maximum des IDs des cours existants
-            return donnees.listCours.Count > 0 ? donnees.listCours.Max(c => c.numberId) : 0;
+            return donnees.listCours.Count > 0 ? donnees.listCours.Max(c => c.coursID) : 0;
         }
         public string DemanderEtValiderNom(string message)
         {

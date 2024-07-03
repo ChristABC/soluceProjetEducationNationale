@@ -1,0 +1,92 @@
+{
+  "listCours": [
+    {
+      "coursID": 0,
+      "Nom": "Physique"
+    },
+    {
+      "coursID": 1,
+      "Nom": "Mathematiques"
+    }
+  ],
+  "listEleve": [
+    {
+      "PromotionEleve": "Promotion A",
+      "Moyenne": "0.0",
+      "ID": 1,
+      "Nom": "John",
+      "Prenom": "Curtis",
+      "DateDeNaissance": "2012-10-25T00:00:00",
+      "Notes": [
+        {
+          "Moyenne": 0.0,
+          "Matiere": "Physique",
+          "ValeurNote": 14.0,
+          "Appreciation": ""
+        },
+        {
+          "Moyenne": 0.0,
+          "Matiere": "Mathematiques",
+          "ValeurNote": 19.0,
+          "Appreciation": ""
+        }
+      ]
+    },
+    {
+      "PromotionEleve": "Promotion A",
+      "Moyenne": "0.0",
+      "ID": 2,
+      "Nom": "Doe",
+      "Prenom": "John",
+      "DateDeNaissance": "2010-01-01T00:00:00",
+      "Notes": [
+        {
+          "Moyenne": 0.0,
+          "Matiere": "Mathematiques",
+          "ValeurNote": 15.0,
+          "Appreciation": ""
+        }
+      ]
+    },
+    {
+      "PromotionEleve": "Promotion B",
+      "Moyenne": null,
+      "ID": 3,
+      "Nom": "toto",
+      "Prenom": "titi",
+      "DateDeNaissance": "2004-12-24T00:00:00",
+      "Notes": []
+    },
+    {
+      "PromotionEleve": "Promotion C",
+      "Moyenne": null,
+      "ID": 4,
+      "Nom": "Star",
+      "Prenom": "Light",
+      "DateDeNaissance": "1999-11-01T00:00:00",
+      "Notes": [
+        {
+          "Moyenne": 0.0,
+          "Matiere": "Physique",
+          "ValeurNote": 2.0,
+          "Appreciation": ""
+        },
+        {
+          "Moyenne": 0.0,
+          "Matiere": "Physique",
+          "ValeurNote": 10.0,
+          "Appreciation": ""
+        }
+      ]
+    },
+    {
+      "PromotionEleve": "Promotion B",
+      "Moyenne": null,
+      "ID": 5,
+      "Nom": "Docker",
+      "Prenom": "Tony",
+      "DateDeNaissance": "2000-07-22T00:00:00",
+      "Notes": []
+    }
+  ]
+}

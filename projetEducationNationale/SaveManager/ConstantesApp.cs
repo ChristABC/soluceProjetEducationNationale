@@ -9,12 +9,23 @@ using System.Threading.Tasks;
 using System.Xml;
 
 
-namespace projetEducationNationale.SaveManager
+namespace projetEducationNationale
 {
-
-    public class ConstantesApp
+    public static class ConstantesApp
     {
-        public static string Chemin = Directory.GetCurrentDirectory();
+        public static readonly string Chemin;
+
+        static ConstantesApp()
+        {
+            // Obtenir le répertoire de travail actuel
+            string currentDirectory = Directory.GetCurrentDirectory();
+
+            // Séparer le chemin au niveau du répertoire 'bin'
+            string[] test = currentDirectory.Split(new string[] { "bin" }, StringSplitOptions.None);
+
+            // Garder la partie avant 'bin'
+            Chemin = test[0];
+        }
     }
 
     public static class SauvegardeHelper
@@ -27,7 +38,7 @@ namespace projetEducationNationale.SaveManager
             string jsonString = JsonConvert.SerializeObject(donnees, Newtonsoft.Json.Formatting.Indented);
 
             // Écrire la chaîne JSON dans un fichier
-            File.WriteAllText(FichierChemin, jsonString); // Utiliser le chemin du fichier de la classe des constantes
+            File.WriteAllText(FichierChemin, jsonString);
         }
 
         public static MenuGestion.DonneesUtilisateur Load()

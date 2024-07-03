@@ -7,12 +7,26 @@ using System.Text;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using projetEducationNationale.Modeles;
+using Serilog;
+using projetEducationNationale;
+using projetEducationNationale.ManagerFolder;
+using projetEducationNationale.SaveManager;
+
+
 
 namespace projetEducationNationale.ManagerFolder
 {
     public class GestionEleve
     {
-        private MenuGestion.DonneesUtilisateur donnees;
+        public MenuGestion.DonneesUtilisateur donnees;
+        private GestionPromotion gestionPromotion;
+
+        public GestionEleve(GestionPromotion gestionPromotion)
+        {
+            this.gestionPromotion = gestionPromotion;
+        }
+
+
 
         public GestionEleve(MenuGestion.DonneesUtilisateur donnees)
         {
@@ -74,18 +88,23 @@ namespace projetEducationNationale.ManagerFolder
                 // Demande et valide la date de naissance de l'élève
                 DateTime dateDeNaissance = DemanderEtValiderDate("Entrez la date de naissance de l'élève (dd-MM-yyyy) :");
 
-                //Demande et valide la promotion de l'élève
+                // Demande et valide la promotion de l'élève
                 string nomPromotion = DemanderEtValiderNomPromotion();
 
-                // Création de l'instance de Promotion avec le nom validé
-                Promotion nouvellePromotion = new Promotion(nomPromotion);
+                // Vérifier si la promotion existe déjà
+                Promotion promotionExistante = gestionPromotion.listPromotion.FirstOrDefault(p => p.NamePromotion == nomPromotion);
+                if (promotionExistante == null)
+                {
+                    // Si la promotion n'existe pas, la créer et l'ajouter à la liste des promotions
+                    Promotion nouvellePromotion = new Promotion(nomPromotion);
+                    gestionPromotion.listPromotion.Add(nouvellePromotion);
+                }
 
                 // Création du nouvel élève
                 Eleve nouvelEleve = new Eleve(id, nom, prenom, dateDeNaissance, nomPromotion);
                 donnees.listEleve.Add(nouvelEleve);
-                donnees.listPromotion.Add(nouvellePromotion);
 
-                Console.WriteLine($"L'élève, {prenom} {nom}, né le {dateDeNaissance:dd-MM-yyyy} a été ajouté à la promotion {nomPromotion}. ");
+                Console.WriteLine($"L'élève, {prenom} {nom}, né le {dateDeNaissance:dd-MM-yyyy} a été ajouté à la promotion {nomPromotion}.");
             }
             catch (FormatException)
             {
@@ -94,42 +113,47 @@ namespace projetEducationNationale.ManagerFolder
         }
 
 
+
+        private int ObtenirMaxIdEleve()
+        {
+            // Implémentation pour obtenir le maximum ID des élèves existants
+            return donnees.listEleve.Any() ? donnees.listEleve.Max(e => e.ID) : 0;
+        }
+
         private string DemanderEtValiderNom(string message)
         {
-            string nom;
-            do
+            Console.WriteLine(message);
+            string input = Console.ReadLine();
+            if (string.IsNullOrWhiteSpace(input) || !input.All(char.IsLetter))
             {
-                Console.WriteLine(message);
-                nom = Console.ReadLine();
-
-                if (!EstNomValide(nom))
-                {
-                    Console.WriteLine("Le nom ou prénom doit contenir uniquement des lettres. Veuillez réessayer.");
-                }
+                throw new FormatException("Le nom et le prenom doivent contenir uniquement des lettres.");
             }
-            while (!EstNomValide(nom));
-
-            return nom;
+            return input;
         }
 
         private DateTime DemanderEtValiderDate(string message)
         {
-            DateTime date;
-            while (true)
+            Console.WriteLine(message);
+            string input = Console.ReadLine();
+            if (!DateTime.TryParseExact(input, "dd-MM-yyyy", null, System.Globalization.DateTimeStyles.None, out DateTime date))
             {
-                Console.WriteLine(message);
-                string dateInput = Console.ReadLine();
-
-                if (EstDateValide(dateInput, out date))
-                {
-                    break;
-                }
-                else
-                {
-                    Console.WriteLine("Le format de la date est invalide ou la personne a plus de 60 ans. Veuillez réessayer.");
-                }
+                throw new FormatException("Format de date invalide. Utilisez le format dd-MM-yyyy.");
             }
             return date;
+        }
+
+        public string DemanderEtValiderNomPromotion()
+        {
+            Console.WriteLine("Entrez le nom de la promotion :");
+            string input = Console.ReadLine();
+
+            // Utilisation d'une expression régulière pour vérifier si l'entrée contient uniquement des lettres ou des chiffres
+            if (string.IsNullOrWhiteSpace(input) || !Regex.IsMatch(input, @"^[a-zA-Z0-9 ]+$"))
+            {
+                throw new FormatException("Le nom de la promotion ne doit contenir que des lettres (a-zA-Z) ou des chiffres (0-9).");
+            }
+
+            return input;
         }
 
 
@@ -141,22 +165,21 @@ namespace projetEducationNationale.ManagerFolder
             }
         }
 
+
+
         public Eleve ObtenirEleveParId(int id)
         {
             return donnees.listEleve.Find(eleve => eleve.ID == id);
         }
 
-        public int ObtenirMaxIdEleve()
-        {
-            return donnees.listEleve.Max(eleve => eleve.ID);
-        }
+
         public void AfficherDetailsEleve(Eleve eleve)
         {
             if (eleve != null)
             {
                 Console.WriteLine("\n----------------------------------------------------------------------\n");
-                Console.WriteLine($"\nNom\t\t\t\t: {eleve.Nom}\n \nPrénom\t\t\t\t: {eleve.Prenom}\n \n\t\t\t\tDate de Naissance: {eleve.DateDeNaissance.ToShortDateString()}\n");
-                Console.WriteLine($"\nPromotion\t\t\t\t: {eleve.PromotionEleve}\n");
+                Console.WriteLine($"\nNom\t\t\t\t: {eleve.Nom}\n \nPrénom\t\t\t\t: {eleve.Prenom}\n \nDate de Naissance \t\t: {eleve.DateDeNaissance.ToShortDateString()}\n");
+                Console.WriteLine($"\nPromotion\t\t\t: {eleve.PromotionEleve}\n");
                 Console.WriteLine("\nRésultats scolaires :\n");
                 foreach (var note in eleve.Notes)
                 {
@@ -184,14 +207,14 @@ namespace projetEducationNationale.ManagerFolder
         public void AjouterNoteEtAppreciation()
         {
             Console.WriteLine("Entrez l'ID de l'élève:");
-            int id = Convert.ToInt32(Console.ReadLine());
-            Eleve eleve = ObtenirEleveParId(id);
+            int ID = Convert.ToInt32(Console.ReadLine());
+            Eleve eleve = ObtenirEleveParId(ID);
 
             if (eleve != null)
             {
-                Console.WriteLine("Entrez le numberId du cours: ");
-                int x = Convert.ToInt32(Console.ReadLine());
-                Cours cours = ObtenirCoursParId(x);
+                Console.WriteLine("Entrez le coursID du cours: ");
+                int coursID = Convert.ToInt32(Console.ReadLine());
+                Cours cours = ObtenirCoursParId(coursID);
 
                 if (cours != null)
                 {
@@ -225,7 +248,7 @@ namespace projetEducationNationale.ManagerFolder
         }
         public Cours ObtenirCoursParId(int id)
         {
-            return donnees.listCours.Find(cours => cours.numberId == id);
+            return donnees.listCours.Find(cours => cours.coursID == id);
         }
         public bool EstNomValide(string input)
         {
@@ -265,26 +288,9 @@ namespace projetEducationNationale.ManagerFolder
             return false;
         }
 
-        public static string DemanderEtValiderNomPromotion() //Sans caractères spéciaux
-        {
-            string nom;
-            Regex regex = new Regex("^[a-zA-Z ]+$"); // Expression régulière pour autoriser seulement des lettres de l'alphabet
 
-            do
-            {
-                Console.WriteLine("Entrez le nom de la promotion sans caractères spéciaux (uniquement des lettres) :");
-                nom = Console.ReadLine().Trim(); // Trim pour enlever les espaces au début et à la fin
-
-                if (!regex.IsMatch(nom))
-                {
-                    Console.WriteLine("Le nom ne doit contenir que des lettres de l'alphabet. Veuillez réessayer.");
-                }
-            }
-            while (!regex.IsMatch(nom));
-
-            return nom;
-        }
     }
 }
+
 
 
