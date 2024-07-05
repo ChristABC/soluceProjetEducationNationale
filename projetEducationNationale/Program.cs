@@ -10,16 +10,16 @@ LoggerConfig.Configuration();
 
 try
 {
-    // Étape 1 : Charger les données utilisateur depuis la sauvegarde
+    // Charge les données utilisateur depuis la sauvegarde
     MenuGestion.DonneesUtilisateur donneesUtilisateur = SauvegardeHelper.Load();
 
-    // Étape 2 : Créer une instance de MenuGestion avec les données utilisateur chargées
+    // Cré une instance de MenuGestion avec les données utilisateur chargées
     MenuGestion menuGestion = new MenuGestion(donneesUtilisateur);
 
-    // Étape 3 : Appeler le menu principal pour commencer l'interaction avec l'utilisateur
+    // Appel le menu principal pour commencer l'interaction avec l'utilisateur
     menuGestion.MenuPrincipal();
 
-    // Étape 4 : Sauvegarder les données utilisateur après les modifications
+    // Sauvegarde les données utilisateur après les modifications
     SauvegardeHelper.Save(donneesUtilisateur);
 
     // Log d'information pour confirmer la sauvegarde

@@ -8,7 +8,7 @@ namespace projetEducationNationale.Modeles
 {
     public class Cours
     {
-        //Accesseurs aux infos sur le cours donc id cours et nom
+        //Accesseurs aux informations sur les attributs de la classe cours donc coursID cours et Nom
         public int coursID { get; set; }
         public string Nom { get; set; }
 

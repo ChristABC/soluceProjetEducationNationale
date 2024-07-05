@@ -5,8 +5,12 @@
       "Nom": "Physique"
     },
     {
-      "coursID": 1,
-      "Nom": "Mathematiques"
+      "coursID": 2,
+      "Nom": "Informatique"
+    },
+    {
+      "coursID": 3,
+      "Nom": "Musique"
     }
   ],
   "listEleve": [

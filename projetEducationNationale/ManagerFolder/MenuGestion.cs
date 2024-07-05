@@ -36,10 +36,10 @@ namespace projetEducationNationale.ManagerFolder
         {
             while (true)
             {
-                Console.WriteLine("1. Gestion des élèves");
-                Console.WriteLine("2. Gestion des cours");
-                Console.WriteLine("3. Gestion des promotions");
-                Console.WriteLine("4. Quitter");
+                Console.WriteLine("\n1. Gestion des élèves");
+                Console.WriteLine("\n2. Gestion des cours");
+                Console.WriteLine("\n3. Gestion des promotions");
+                Console.WriteLine("\n4. Quitter");
 
                 string choix = Console.ReadLine();
 
@@ -57,7 +57,7 @@ namespace projetEducationNationale.ManagerFolder
                     case "4":
                         return;
                     default:
-                        Console.WriteLine("Choix incorrect.");
+                        Console.WriteLine("\nChoix incorrect.");
                         break;
                 }
             }

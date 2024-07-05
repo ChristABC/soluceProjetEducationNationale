@@ -23,10 +23,12 @@ namespace projetEducationNationale.ManagerFolder
         {
             while (true)
             {
-                Console.WriteLine("1. Lister les cours existants");
-                Console.WriteLine("2. Ajouter un nouveau cours au programme");
-                Console.WriteLine("3. Supprimer un cours par son identifiant");
-                Console.WriteLine("4. Revenir au menu principal");
+                Console.WriteLine("\n1. Lister les cours existants");
+                Console.WriteLine("\n2. Ajouter un nouveau cours au programme");
+                Console.WriteLine("\n3. Supprimer un cours par son identifiant");
+                Console.WriteLine("\n4. Revenir au menu principal");
+
+                Console.WriteLine("\nQuel est votre choix ? ");
 
                 string choix = Console.ReadLine();
 
@@ -39,12 +41,13 @@ namespace projetEducationNationale.ManagerFolder
                         AjouterCours();
                         break;
                     case "3":
+                        AfficherCours();
                         SupprimerCours();
                         break;
                     case "4":
                         return;
                     default:
-                        Console.WriteLine("Choix incorrect.");
+                        Console.WriteLine("\nChoix incorrect.");
                         break;
                 }
             }
@@ -55,25 +58,25 @@ namespace projetEducationNationale.ManagerFolder
             try
             {
                 int coursID = ObtenirMaxIdCours() + 1;
-                
-                string nom = DemanderEtValiderNom("Entrez le nom du cours (lettres uniquement) :");
+
+                string nom = DemanderEtValiderNom("\nEntrez le nom du cours (lettres uniquement) :");
 
                 Cours nouveauCours = new Cours(coursID, nom);
                 donnees.listCours.Add(nouveauCours);
 
-                Console.WriteLine($"Le cours {nom} avec l'ID {coursID} a été ajouté.");
+                Console.WriteLine($"\nLe cours {nom} avec l'ID {coursID} a été ajouté.");
                 SauvegardeHelper.Save(donnees);
-                Log.Information("Les données pour l'ajout d'un nouveau cours ont été sauvegardées avec succès.");
+                Log.Information("\nLes données pour l'ajout d'un nouveau cours ont été sauvegardées avec succès.");
             }
             catch (FormatException)
             {
-                Console.WriteLine("Entrée invalide. Veuillez réessayer.");
+                Console.WriteLine("\nEntrée invalide. Veuillez réessayer.");
             }
         }
 
         public void SupprimerCours()
         {
-            Console.WriteLine("Entrez l'ID du cours:");
+            Console.WriteLine("\nEntrez l'ID du cours :");
 
             if (int.TryParse(Console.ReadLine(), out int coursID))
             {
@@ -84,25 +87,25 @@ namespace projetEducationNationale.ManagerFolder
                     if (DemanderConfirmationSuppression(cours))
                     {
                         donnees.listCours.Remove(cours);
-                        Console.WriteLine($"Le cours avec l'coursID {coursID} a été supprimé.");
+                        Console.WriteLine($"\nLe cours avec l'coursID {coursID} a été supprimé.");
                         SauvegardeHelper.Save(donnees);
-                        Log.Information("Les données de la suppression du cours ont été sauvegardées avec succès.");
+                        Log.Information("\nLes données de la suppression du cours ont été sauvegardées avec succès.");
                     }
                 }
                 else
                 {
-                    Console.WriteLine($"Aucun cours trouvé avec le coursID suivant :  {coursID}.");
+                    Console.WriteLine($"\nAucun cours trouvé avec le coursID suivant :  {coursID}.");
                 }
             }
             else
             {
-                Console.WriteLine("CoursID invalcoursIDe. Veuillez entrer un nombre entier.");
+                Console.WriteLine("\nCoursID invalide. Veuillez entrer un nombre entier.");
             }
         }
 
         private bool DemanderConfirmationSuppression(Cours cours)
         {
-            Console.WriteLine($"Voulez-vous supprimer le cours {cours.Nom} ? (oui/non)");
+            Console.WriteLine($"\nVoulez-vous supprimer le cours {cours.Nom} ? (oui/non)");
             string confirmer = Console.ReadLine().ToLower();
 
             return confirmer == "oui";
@@ -110,10 +113,10 @@ namespace projetEducationNationale.ManagerFolder
 
         public void AfficherCours()
         {
-            Console.WriteLine("Liste de Cours : ");
+            Console.WriteLine("\nListe de Cours : ");
             foreach (var cours in donnees.listCours)
             {
-                Console.WriteLine($"ID: {cours.coursID}, Nom: {cours.Nom}");
+                Console.WriteLine($"\nID: {cours.coursID}, Nom: {cours.Nom}");
             }
         }
 
@@ -137,7 +140,7 @@ namespace projetEducationNationale.ManagerFolder
 
                 if (!EstNomValide(nom))
                 {
-                    Console.WriteLine("Le nom doit contenir uniquement des lettres. Veuillez réessayer.");
+                    Console.WriteLine("\nLe nom doit contenir uniquement des lettres. Veuillez réessayer.");
                 }
             }
             while (!EstNomValide(nom));
